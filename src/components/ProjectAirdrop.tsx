@@ -1,8 +1,10 @@
 
-import { useState } from 'react';
-import { Package, ExternalLink } from 'lucide-react';
-import { useIntersectionObserver, useRandomFloatAnimation } from '@/utils/animations';
+import { useState, useEffect } from 'react';
+import { ExternalLink } from 'lucide-react';
+import { useIntersectionObserver } from '@/utils/animations';
 import { motion } from 'framer-motion';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 interface ProjectAirdropProps {
   id: string;
@@ -27,80 +29,135 @@ export const ProjectAirdrop = ({
 }: ProjectAirdropProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const { ref, isIntersecting } = useIntersectionObserver();
-  const floatStyle = useRandomFloatAnimation(id.charCodeAt(0) % 3, [4, 7]);
+  const [isDropping, setIsDropping] = useState(true);
+  const [dropPosition, setDropPosition] = useState({ x, y });
+  
+  // Manage the initial dropping animation
+  useEffect(() => {
+    // Randomize the initial x position slightly
+    const randomX = x + (Math.random() * 10 - 5);
+    setDropPosition({ x: randomX, y });
+    
+    const timer = setTimeout(() => {
+      setIsDropping(false);
+    }, 2000 + Math.random() * 2000); // Random time between 2-4 seconds
+    
+    return () => clearTimeout(timer);
+  }, [x, y]);
+  
+  // Periodically trigger new drops
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() > 0.8) { // 20% chance to trigger a new drop
+        setIsDropping(true);
+        setTimeout(() => {
+          setIsDropping(false);
+        }, 2000 + Math.random() * 2000);
+      }
+    }, 10000); // Check every 10 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <motion.div
       ref={ref}
-      className="airdrop"
+      className="airdrop absolute"
       style={{
-        left: `${x}%`,
-        top: `${y}%`,
-        ...floatStyle
+        left: `${dropPosition.x}%`,
+        top: `${dropPosition.y}%`,
       }}
-      initial={{ y: -50, opacity: 0 }}
-      animate={isIntersecting ? { y: 0, opacity: 1 } : { y: -50, opacity: 0 }}
-      transition={{ duration: 0.7, delay: 0.2 }}
+      initial={{ y: -200, opacity: 0 }}
+      animate={
+        isDropping 
+          ? { y: 0, opacity: 1, transition: { duration: 3, ease: "easeOut" } } 
+          : { y: 0, opacity: 1 }
+      }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative z-10 w-14 h-14 flex items-center justify-center bg-navy-light bg-opacity-90 rounded-lg shadow-lg transition-all">
-        <Package className="text-parchment-light" size={28} />
-        <div className="absolute h-8 w-[2px] -top-8 left-1/2 -translate-x-1/2 bg-navy-light bg-opacity-50"></div>
-      </div>
-      
-      <div className="airdrop-content -translate-x-1/2 -translate-y-full mb-4 border border-navy-light">
-        <div className="flex flex-col gap-3">
-          {image && (
-            <div className="w-full h-40 rounded-md overflow-hidden">
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <div className="flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-110">
+            {/* Parachute */}
+            <div className="w-16 h-12 mb-1">
               <img 
-                src={image} 
-                alt={title} 
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/placeholder.svg';
-                }}
+                src="/lovable-uploads/2c1accd0-24a2-44b0-92bd-1ade51ad9535.png" 
+                alt="Parachute treasure" 
+                className="w-full object-contain"
               />
             </div>
-          )}
-          
-          <div>
-            <div className="flex justify-between items-start">
-              <h3 className="font-display text-xl text-navy-dark">{title}</h3>
-              {link && (
-                <a 
-                  href={link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-treasure-gold hover:text-treasure-red transition-colors"
-                >
-                  <ExternalLink size={18} />
-                </a>
+            
+            {/* Connecting strings - only visible during dropping */}
+            {isDropping && (
+              <div className="flex justify-between w-10 h-10 relative">
+                <div className="absolute left-0 w-[1px] h-full bg-treasure-brown transform -rotate-12"></div>
+                <div className="absolute left-1/4 w-[1px] h-full bg-treasure-brown transform -rotate-6"></div>
+                <div className="absolute left-2/4 w-[1px] h-full bg-treasure-brown transform rotate-6"></div>
+                <div className="absolute left-3/4 w-[1px] h-full bg-treasure-brown transform rotate-12"></div>
+              </div>
+            )}
+            
+            {/* Treasure chest */}
+            <div className="w-8 h-8 bg-[url('/treasure-chest.svg')] bg-contain bg-center bg-no-repeat relative">
+              {!isDropping && (
+                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-marker text-navy-dark whitespace-nowrap">
+                  {title}
+                </div>
               )}
             </div>
-            
-            <p className="text-treasure-brown mt-2">{description}</p>
-            
-            <div className="flex flex-wrap gap-2 mt-3">
-              {technologies.map((tech, index) => (
-                <span 
-                  key={index}
-                  className="text-xs px-2 py-1 bg-navy-light text-parchment-light rounded-full"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
           </div>
-        </div>
-      </div>
-      
-      {isHovered && (
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 font-marker text-sm whitespace-nowrap text-navy-dark animate-fade-in">
-          {title}
-        </div>
-      )}
+        </HoverCardTrigger>
+        
+        <HoverCardContent className="w-80 bg-parchment-light border-treasure-brown">
+          <Card className="border-none shadow-none bg-transparent">
+            {image && (
+              <div className="w-full h-40 rounded-md overflow-hidden mb-3">
+                <img 
+                  src={image} 
+                  alt={title} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/placeholder.svg';
+                  }}
+                />
+              </div>
+            )}
+            
+            <CardHeader className="p-0 space-y-1">
+              <div className="flex justify-between items-start">
+                <CardTitle className="text-xl text-navy-dark">{title}</CardTitle>
+                {link && (
+                  <a 
+                    href={link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-treasure-gold hover:text-treasure-red transition-colors"
+                  >
+                    <ExternalLink size={18} />
+                  </a>
+                )}
+              </div>
+            </CardHeader>
+            
+            <CardContent className="p-0 pt-2">
+              <CardDescription className="text-treasure-brown">{description}</CardDescription>
+              
+              <div className="flex flex-wrap gap-2 mt-3">
+                {technologies.map((tech, index) => (
+                  <span 
+                    key={index}
+                    className="text-xs px-2 py-1 bg-navy-light text-parchment-light rounded-full"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </HoverCardContent>
+      </HoverCard>
     </motion.div>
   );
 };

@@ -76,6 +76,33 @@ export function useRandomFloatAnimation(
   return style;
 }
 
+export function useParachuteDrop(
+  initialY: number = -200,
+  finalY: number = 0,
+  duration: number = 3
+) {
+  const [y, setY] = useState(initialY);
+  const [isDropping, setIsDropping] = useState(true);
+  
+  useEffect(() => {
+    if (isDropping) {
+      const timer = setTimeout(() => {
+        setY(finalY);
+        setIsDropping(false);
+      }, duration * 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isDropping, finalY, duration]);
+  
+  const resetDrop = () => {
+    setY(initialY);
+    setIsDropping(true);
+  };
+  
+  return { y, isDropping, resetDrop };
+}
+
 export function useRotateAnimation(
   speed: number = 12,
   reverse: boolean = false,

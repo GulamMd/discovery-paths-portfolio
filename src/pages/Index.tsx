@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 const Index = () => {
   useEffect(() => {
     // Welcome toast
-    const timer = setTimeout(() => {
+    const timer1 = setTimeout(() => {
       toast("Welcome to the Treasure Portfolio!", {
         description: "Click on map markers to explore my journey",
         position: "bottom-center",
@@ -15,7 +15,19 @@ const Index = () => {
       });
     }, 1500);
     
-    return () => clearTimeout(timer);
+    // Airdrop toast
+    const timer2 = setTimeout(() => {
+      toast("Look for airdrops!", {
+        description: "Treasure chests are falling from the sky with my projects",
+        position: "bottom-center",
+        duration: 5000,
+      });
+    }, 4000);
+    
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, []);
 
   return (

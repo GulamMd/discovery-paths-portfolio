@@ -101,7 +101,7 @@ export const projectItems: ProjectItem[] = [
     title: "E-commerce Dashboard",
     description: "A responsive dashboard for e-commerce analytics with real-time data visualization and user management.",
     technologies: ["React", "TypeScript", "Tailwind CSS", "Chart.js"],
-    image: "/project1-image.jpg",
+    image: "https://source.unsplash.com/random/800x600/?dashboard",
     link: "https://github.com/yourusername/project1",
     coordinates: { x: 18, y: 62 }
   },
@@ -110,7 +110,7 @@ export const projectItems: ProjectItem[] = [
     title: "Weather App",
     description: "A beautiful weather application with location-based forecasts, interactive maps, and severe weather alerts.",
     technologies: ["React", "Redux", "OpenWeatherMap API", "Mapbox"],
-    image: "/project2-image.jpg", 
+    image: "https://source.unsplash.com/random/800x600/?weather", 
     link: "https://github.com/yourusername/project2",
     coordinates: { x: 42, y: 72 }
   },
@@ -119,9 +119,27 @@ export const projectItems: ProjectItem[] = [
     title: "Task Management System",
     description: "A collaborative task management system with real-time updates, file sharing, and team communication features.",
     technologies: ["Next.js", "Firebase", "Tailwind CSS", "React Query"],
-    image: "/project3-image.jpg",
+    image: "https://source.unsplash.com/random/800x600/?tasks",
     link: "https://github.com/yourusername/project3",
     coordinates: { x: 65, y: 68 }
+  },
+  {
+    id: "proj4",
+    title: "AI Chatbot Assistant",
+    description: "An intelligent chatbot powered by machine learning that helps users find information and solve problems.",
+    technologies: ["React", "Node.js", "OpenAI API", "Socket.io"],
+    image: "https://source.unsplash.com/random/800x600/?robot",
+    link: "https://github.com/yourusername/project4",
+    coordinates: { x: 30, y: 45 }
+  },
+  {
+    id: "proj5",
+    title: "Portfolio Website",
+    description: "An interactive portfolio website with a unique treasure map theme and engaging animations.",
+    technologies: ["React", "TypeScript", "Framer Motion", "Tailwind CSS"],
+    image: "https://source.unsplash.com/random/800x600/?map",
+    link: "https://github.com/yourusername/portfolio",
+    coordinates: { x: 55, y: 55 }
   }
 ];
 
