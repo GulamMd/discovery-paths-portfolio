@@ -9,7 +9,7 @@ const Index = () => {
     // Welcome toast
     const timer1 = setTimeout(() => {
       toast("Welcome to the Treasure Portfolio!", {
-        description: "Click on map markers to explore my journey",
+        description: "Explore my journey through this interactive map",
         position: "bottom-center",
         duration: 5000,
       });
@@ -17,8 +17,8 @@ const Index = () => {
     
     // Airdrop toast
     const timer2 = setTimeout(() => {
-      toast("Look for airdrops!", {
-        description: "Treasure chests are falling from the sky with my projects",
+      toast("Watch for airdrops!", {
+        description: "Treasure chests are falling randomly from the sky with my projects",
         position: "bottom-center",
         duration: 5000,
       });

@@ -3,21 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Fullscreen } from "lucide-react";
 import { useParallaxEffect } from "@/utils/animations";
-import MapMarker from "./MapMarker";
 import ProjectAirdrop from "./ProjectAirdrop";
-import SkillBadge from "./SkillBadge";
 import ContactsSection from "./ContactsSection";
-import MapNavigation from "./MapNavigation";
 import {
   contactInfo,
-  educationItems,
-  achievementItems,
   projectItems,
-  skillItems,
 } from "@/data/portfolioData";
 
 const TreasureMap = () => {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,29 +24,6 @@ const TreasureMap = () => {
       transition: { duration: 1, ease: "easeOut" },
     });
   }, [controls]);
-
-  const handleMarkerSelect = (id: string) => {
-    setActiveSection(id);
-  };
-
-  const handleNavigationSelect = (section: string) => {
-    setActiveSection(section);
-
-    // Scroll to the section
-    const sections: { [key: string]: string } = {
-      education: educationItems[0].id,
-      achievements: achievementItems[0].id,
-      projects: projectItems[0].id,
-      skills: skillItems[0].id,
-    };
-
-    const targetId = sections[section] || section;
-
-    const elements = document.querySelectorAll(`[data-id="${targetId}"]`);
-    if (elements.length > 0) {
-      elements[0].scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  };
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -78,13 +48,6 @@ const TreasureMap = () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
-
-  const navigationItems = [
-    { id: "education", label: "Education" },
-    { id: "achievements", label: "Achievements" },
-    { id: "projects", label: "Projects" },
-    { id: "skills", label: "Skills" },
-  ];
 
   return (
     <div ref={containerRef} className="h-full w-full overflow-hidden">
@@ -138,7 +101,7 @@ const TreasureMap = () => {
           {/* Fullscreen toggle */}
           <motion.button
             onClick={toggleFullscreen}
-            className="absolute top-5 right-5 md:top-5 md:right-1/2 transform md:translate-x-1/2 z-20 bg-parchment-light border-2 border-treasure-brown rounded-full p-2 shadow-md hover:border-treasure-gold"
+            className="absolute top-5 right-5 md:top-5 md:right-5 z-20 bg-parchment-light border-2 border-treasure-brown rounded-full p-2 shadow-md hover:border-treasure-gold"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             initial={{ opacity: 0, y: -20 }}
@@ -148,48 +111,10 @@ const TreasureMap = () => {
             <Fullscreen className="text-treasure-red h-6 w-6" />
           </motion.button>
 
-          {/* Map markers for education */}
-          <div className="relative z-10">
-            {educationItems.map((item) => (
-              <div data-id={item.id} key={item.id}>
-                <MapMarker
-                  id={item.id}
-                  type="education"
-                  title={item.title}
-                  subtitle={`${item.institution} • ${item.period}`}
-                  description={item.description}
-                  x={item.coordinates.x}
-                  y={item.coordinates.y}
-                  onSelect={handleMarkerSelect}
-                  isActive={activeSection === item.id}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Map markers for achievements */}
-          <div className="relative z-10">
-            {achievementItems.map((item) => (
-              <div data-id={item.id} key={item.id}>
-                <MapMarker
-                  id={item.id}
-                  type="achievement"
-                  title={item.title}
-                  subtitle={item.date}
-                  description={item.description}
-                  x={item.coordinates.x}
-                  y={item.coordinates.y}
-                  onSelect={handleMarkerSelect}
-                  isActive={activeSection === item.id}
-                />
-              </div>
-            ))}
-          </div>
-
           {/* Project airdrops */}
           <div className="relative z-10">
             {projectItems.map((item) => (
-              <div data-id={item.id} key={item.id}>
+              <div key={item.id}>
                 <ProjectAirdrop
                   id={item.id}
                   title={item.title}
@@ -203,29 +128,6 @@ const TreasureMap = () => {
               </div>
             ))}
           </div>
-
-          {/* Skill badges */}
-          <div className="relative z-10">
-            {skillItems.map((item) => (
-              <div data-id={item.id} key={item.id}>
-                <SkillBadge
-                  id={item.id}
-                  name={item.name}
-                  icon={item.icon}
-                  level={item.level}
-                  x={item.coordinates.x}
-                  y={item.coordinates.y}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Navigation */}
-          <MapNavigation
-            items={navigationItems}
-            onSelect={handleNavigationSelect}
-            activeItem={activeSection || undefined}
-          />
 
           {/* Decorative elements */}
           <motion.div

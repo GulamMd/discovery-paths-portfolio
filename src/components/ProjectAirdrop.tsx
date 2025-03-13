@@ -1,7 +1,6 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ExternalLink } from 'lucide-react';
-import { useIntersectionObserver } from '@/utils/animations';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -28,50 +27,57 @@ export const ProjectAirdrop = ({
   y
 }: ProjectAirdropProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { ref, isIntersecting } = useIntersectionObserver();
   const [isDropping, setIsDropping] = useState(true);
   const [dropPosition, setDropPosition] = useState({ x, y });
+  const initialized = useRef(false);
   
-  // Manage the initial dropping animation
+  // Initial drop animation - only runs once
   useEffect(() => {
-    // Randomize the initial x position slightly
-    const randomX = x + (Math.random() * 10 - 5);
-    setDropPosition({ x: randomX, y });
-    
-    const timer = setTimeout(() => {
-      setIsDropping(false);
-    }, 2000 + Math.random() * 2000); // Random time between 2-4 seconds
-    
-    return () => clearTimeout(timer);
+    if (!initialized.current) {
+      // Randomize the initial x position slightly
+      const randomX = x + (Math.random() * 10 - 5);
+      setDropPosition({ x: randomX, y });
+      
+      const timer = setTimeout(() => {
+        setIsDropping(false);
+      }, 2000 + Math.random() * 2000); // Random time between 2-4 seconds
+      
+      initialized.current = true;
+      return () => clearTimeout(timer);
+    }
   }, [x, y]);
   
-  // Periodically trigger new drops
+  // Reset the drop periodically
   useEffect(() => {
     const interval = setInterval(() => {
-      if (Math.random() > 0.8) { // 20% chance to trigger a new drop
+      if (Math.random() > 0.7) { // 30% chance to trigger a new drop
+        // Generate new random x position within the map bounds
+        const newX = Math.random() * 80 + 10; // Between 10% and 90% of width
+        setDropPosition({ x: newX, y });
         setIsDropping(true);
+        
         setTimeout(() => {
           setIsDropping(false);
-        }, 2000 + Math.random() * 2000);
+        }, 3000 + Math.random() * 2000);
       }
-    }, 10000); // Check every 10 seconds
+    }, 15000); // Check every 15 seconds
     
     return () => clearInterval(interval);
-  }, []);
+  }, [y]);
 
   return (
     <motion.div
-      ref={ref}
       className="airdrop absolute"
       style={{
         left: `${dropPosition.x}%`,
-        top: `${dropPosition.y}%`,
+        top: isDropping ? "-10%" : `${dropPosition.y}%`,
+        pointerEvents: isDropping ? "none" : "auto",
       }}
-      initial={{ y: -200, opacity: 0 }}
+      initial={{ opacity: 0 }}
       animate={
         isDropping 
-          ? { y: 0, opacity: 1, transition: { duration: 3, ease: "easeOut" } } 
-          : { y: 0, opacity: 1 }
+          ? { y: [`-10vh`, `${dropPosition.y}vh`], opacity: 1, transition: { duration: 3, ease: "easeOut" } } 
+          : { opacity: 1 }
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
