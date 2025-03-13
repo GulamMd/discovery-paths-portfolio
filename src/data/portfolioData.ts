@@ -43,6 +43,7 @@ export interface ContactInfo {
   linkedin?: string;
   twitter?: string;
   location?: string;
+  avatar?: string;
 }
 
 // Replace this data with your actual information
@@ -54,7 +55,8 @@ export const contactInfo: ContactInfo = {
   github: "https://github.com/yourusername",
   linkedin: "https://linkedin.com/in/yourusername",
   twitter: "https://twitter.com/yourusername",
-  location: "City, Country"
+  location: "City, Country",
+  avatar: "/avatar.jpg" // Add your image to the public folder
 };
 
 export const educationItems: EducationItem[] = [
@@ -64,7 +66,7 @@ export const educationItems: EducationItem[] = [
     institution: "University Name",
     period: "2015 - 2019",
     description: "Studied computer science with a focus on web development and user experience design. Graduated with honors.",
-    coordinates: { x: 25, y: 35 }
+    coordinates: { x: 22, y: 32 }
   },
   {
     id: "edu2",
@@ -72,7 +74,7 @@ export const educationItems: EducationItem[] = [
     institution: "Coding Academy",
     period: "2020",
     description: "Intensive 3-month program focused on modern frontend technologies and best practices.",
-    coordinates: { x: 40, y: 30 }
+    coordinates: { x: 38, y: 28 }
   }
 ];
 
@@ -82,14 +84,14 @@ export const achievementItems: AchievementItem[] = [
     title: "Hackathon Winner",
     date: "June 2022",
     description: "First place in the annual Code Challenge hackathon for creating an innovative web application.",
-    coordinates: { x: 65, y: 40 }
+    coordinates: { x: 68, y: 35 }
   },
   {
     id: "ach2",
     title: "Open Source Contributor",
     date: "2021 - Present",
     description: "Active contributor to several open source projects with over 50 accepted pull requests.",
-    coordinates: { x: 75, y: 55 }
+    coordinates: { x: 78, y: 48 }
   }
 ];
 
@@ -101,7 +103,7 @@ export const projectItems: ProjectItem[] = [
     technologies: ["React", "TypeScript", "Tailwind CSS", "Chart.js"],
     image: "/project1-image.jpg",
     link: "https://github.com/yourusername/project1",
-    coordinates: { x: 20, y: 70 }
+    coordinates: { x: 18, y: 62 }
   },
   {
     id: "proj2",
@@ -110,7 +112,7 @@ export const projectItems: ProjectItem[] = [
     technologies: ["React", "Redux", "OpenWeatherMap API", "Mapbox"],
     image: "/project2-image.jpg", 
     link: "https://github.com/yourusername/project2",
-    coordinates: { x: 40, y: 65 }
+    coordinates: { x: 42, y: 72 }
   },
   {
     id: "proj3",
@@ -119,7 +121,7 @@ export const projectItems: ProjectItem[] = [
     technologies: ["Next.js", "Firebase", "Tailwind CSS", "React Query"],
     image: "/project3-image.jpg",
     link: "https://github.com/yourusername/project3",
-    coordinates: { x: 60, y: 75 }
+    coordinates: { x: 65, y: 68 }
   }
 ];
 
@@ -129,34 +131,34 @@ export const skillItems: SkillItem[] = [
     name: "React",
     icon: "react",
     level: 5,
-    coordinates: { x: 35, y: 20 }
+    coordinates: { x: 28, y: 15 }
   },
   {
     id: "skill2",
     name: "TypeScript",
     icon: "typescript",
     level: 4,
-    coordinates: { x: 45, y: 15 }
+    coordinates: { x: 42, y: 12 }
   },
   {
     id: "skill3",
     name: "Tailwind CSS",
     icon: "tailwind",
     level: 5,
-    coordinates: { x: 55, y: 20 }
+    coordinates: { x: 56, y: 16 }
   },
   {
     id: "skill4",
     name: "JavaScript",
     icon: "javascript",
     level: 5,
-    coordinates: { x: 65, y: 25 }
+    coordinates: { x: 70, y: 18 }
   },
   {
     id: "skill5",
     name: "HTML/CSS",
     icon: "html",
     level: 5,
-    coordinates: { x: 30, y: 25 }
+    coordinates: { x: 84, y: 22 }
   }
 ];

@@ -20,7 +20,7 @@ const Index = () => {
 
   return (
     <motion.div 
-      className="min-h-screen w-full overflow-hidden"
+      className="w-screen h-screen overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
