@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -30,7 +29,7 @@ export const ProjectAirdrop = ({
   const [isDropping, setIsDropping] = useState(true);
   const [dropPosition, setDropPosition] = useState({ x, y });
   const initialized = useRef(false);
-  
+
   // Initial drop animation - only runs once
   useEffect(() => {
     if (!initialized.current) {
@@ -46,7 +45,7 @@ export const ProjectAirdrop = ({
       return () => clearTimeout(timer);
     }
   }, [x, y]);
-  
+
   // Reset the drop periodically
   useEffect(() => {
     const interval = setInterval(() => {
@@ -88,29 +87,11 @@ export const ProjectAirdrop = ({
             {/* Parachute */}
             <div className="w-16 h-12 mb-1">
               <img 
-                src="/lovable-uploads/2c1accd0-24a2-44b0-92bd-1ade51ad9535.png" 
+                src="/Untitled design.svg" 
                 alt="Parachute treasure" 
                 className="w-full object-contain"
+                style={{ backgroundColor: 'transparent' }}
               />
-            </div>
-            
-            {/* Connecting strings - only visible during dropping */}
-            {isDropping && (
-              <div className="flex justify-between w-10 h-10 relative">
-                <div className="absolute left-0 w-[1px] h-full bg-treasure-brown transform -rotate-12"></div>
-                <div className="absolute left-1/4 w-[1px] h-full bg-treasure-brown transform -rotate-6"></div>
-                <div className="absolute left-2/4 w-[1px] h-full bg-treasure-brown transform rotate-6"></div>
-                <div className="absolute left-3/4 w-[1px] h-full bg-treasure-brown transform rotate-12"></div>
-              </div>
-            )}
-            
-            {/* Treasure chest */}
-            <div className="w-8 h-8 bg-[url('/treasure-chest.svg')] bg-contain bg-center bg-no-repeat relative">
-              {!isDropping && (
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-marker text-navy-dark whitespace-nowrap">
-                  {title}
-                </div>
-              )}
             </div>
           </div>
         </HoverCardTrigger>

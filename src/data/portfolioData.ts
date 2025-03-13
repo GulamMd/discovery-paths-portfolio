@@ -50,12 +50,12 @@ export interface ContactInfo {
 export const contactInfo: ContactInfo = {
   name: "Gulam Mohammad",
   title: "Frontend Developer",
-  email: "your.email@example.com",
-  phone: "+1 (123) 456-7890",
-  github: "https://github.com/yourusername",
-  linkedin: "https://linkedin.com/in/yourusername",
-  twitter: "https://twitter.com/yourusername",
-  location: "City, Country",
+  email: "gulam.khalid@globalids.com",
+  phone: "+91 8298102935",
+  github: "https://github.com/GulamMd",
+  linkedin: "https://www.linkedin.com/in/gulammohammadkhalid/",
+  twitter: "https://x.com/GulamMdKhalid",
+  location: "Kolkata, India",
   avatar: "/lovable-uploads/fb4f8322-d626-4068-8c5d-888b136d76b8.png" // Using the uploaded steampunk avatar
 };
 
@@ -63,8 +63,8 @@ export const educationItems: EducationItem[] = [
   {
     id: "edu1",
     title: "Bachelor's Degree in Computer Science",
-    institution: "University Name",
-    period: "2015 - 2019",
+    institution: "Institute of engineering and management,Kolkata",
+    period: "2018 - 2022",
     description: "Studied computer science with a focus on web development and user experience design. Graduated with honors.",
     coordinates: { x: 22, y: 32 }
   },
