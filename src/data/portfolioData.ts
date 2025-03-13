@@ -48,7 +48,7 @@ export interface ContactInfo {
 
 // Replace this data with your actual information
 export const contactInfo: ContactInfo = {
-  name: "Your Name",
+  name: "Gulam Mohammad",
   title: "Frontend Developer",
   email: "your.email@example.com",
   phone: "+1 (123) 456-7890",
@@ -56,7 +56,7 @@ export const contactInfo: ContactInfo = {
   linkedin: "https://linkedin.com/in/yourusername",
   twitter: "https://twitter.com/yourusername",
   location: "City, Country",
-  avatar: "/avatar.jpg" // Add your image to the public folder
+  avatar: "/lovable-uploads/fb4f8322-d626-4068-8c5d-888b136d76b8.png" // Using the uploaded steampunk avatar
 };
 
 export const educationItems: EducationItem[] = [

@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Fullscreen } from "lucide-react";
@@ -110,11 +111,11 @@ const TreasureMap = () => {
 
           {/* Compass rose */}
           <motion.div
-            className="compass bottom-10 left-10 z-10"
+            className="absolute bottom-10 left-10 z-10 w-24 h-24 bg-[url('/compass-rose.svg')] bg-contain bg-center bg-no-repeat opacity-60"
             initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 0.6, scale: 1 }}
             transition={{ delay: 1, duration: 0.8, ease: "backOut" }}
-          ></motion.div>
+          />
 
           {/* Title */}
           <motion.div
@@ -137,7 +138,7 @@ const TreasureMap = () => {
           {/* Fullscreen toggle */}
           <motion.button
             onClick={toggleFullscreen}
-            className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20 bg-parchment-light border-2 border-treasure-brown rounded-full p-2 shadow-md"
+            className="absolute top-5 right-5 md:top-5 md:right-1/2 transform md:translate-x-1/2 z-20 bg-parchment-light border-2 border-treasure-brown rounded-full p-2 shadow-md hover:border-treasure-gold"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             initial={{ opacity: 0, y: -20 }}
@@ -232,13 +233,26 @@ const TreasureMap = () => {
             style={{ backgroundImage: "url('/compass-rose.svg')" }}
             animate={{ rotate: 360 }}
             transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-          ></motion.div>
+          />
           <motion.div
             className="absolute bottom-1/3 left-1/5 w-24 h-24 opacity-15 bg-contain bg-center bg-no-repeat pointer-events-none"
             style={{ backgroundImage: "url('/ship.svg')" }}
             animate={{ x: [0, 10, 0], y: [0, -5, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          ></motion.div>
+          />
+          
+          {/* New decorative elements */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-16 h-16 opacity-10 bg-contain bg-center bg-no-repeat pointer-events-none"
+            style={{ backgroundImage: "url('/lovable-uploads/fb4f8322-d626-4068-8c5d-888b136d76b8.png')" }}
+            animate={{ rotate: [-5, 5, -5] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 right-1/3 w-20 h-20 opacity-15 bg-treasure-gold blur-md rounded-full pointer-events-none"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.05, 0.1, 0.05] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
         </motion.div>
       </div>
     </div>
