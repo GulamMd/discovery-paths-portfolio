@@ -65,7 +65,7 @@ const TreasureMap = () => {
         >
           {/* Background maps and textures */}
           <div className="absolute inset-0 bg-parchment">
-            <div className="absolute inset-0 bg-[url('/Treasure_Map.jpg')] bg-cover bg-center opacity-90"></div>
+            <div className="absolute inset-0 bg-[url('./lovable-uploads/Treasure_Map.jpg')] bg-cover bg-center opacity-90"></div>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-parchment-dark/20"></div>
           </div>
 
@@ -146,7 +146,7 @@ const TreasureMap = () => {
           {/* New decorative elements */}
           <motion.div
             className="absolute top-1/3 left-1/4 w-16 h-16 opacity-10 bg-contain bg-center bg-no-repeat pointer-events-none"
-            style={{ backgroundImage: "url('/lovable-uploads/fb4f8322-d626-4068-8c5d-888b136d76b8.png')" }}
+            style={{ backgroundImage: "url('./lovable-uploads/fb4f8322-d626-4068-8c5d-888b136d76b8.png')" }}
             animate={{ rotate: [-5, 5, -5] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           />

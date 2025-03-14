@@ -87,7 +87,7 @@ export const ProjectAirdrop = ({
             {/* Parachute */}
             <div className="w-16 h-12 mb-1">
               <img 
-                src="/Untitled design.svg" 
+                src="./lovable-uploads/Untitled design.svg" 
                 alt="Parachute treasure" 
                 className="w-full object-contain"
                 style={{ backgroundColor: 'transparent' }}
