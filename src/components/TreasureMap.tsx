@@ -5,6 +5,8 @@ import { Fullscreen } from "lucide-react";
 import { useParallaxEffect } from "@/utils/animations";
 import ProjectAirdrop from "./ProjectAirdrop";
 import ContactsSection from "./ContactsSection";
+import InfoButton from "./InfoButton";
+import InfoSheet from "./InfoSheet";
 import {
   contactInfo,
   projectItems,
@@ -13,6 +15,7 @@ import {
 const TreasureMap = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeAirdrops, setActiveAirdrops] = useState<Array<{ id: string; project: typeof projectItems[0]; delay: number }>>([]);
+  const [isInfoSheetOpen, setIsInfoSheetOpen] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const parallaxPosition = useParallaxEffect(40);
@@ -144,6 +147,9 @@ const TreasureMap = () => {
 
           {/* Contact info */}
           <ContactsSection contactInfo={contactInfo} />
+          
+          {/* Info Button */}
+          <InfoButton onClick={() => setIsInfoSheetOpen(true)} />
 
           {/* Fullscreen toggle */}
           <motion.button
@@ -193,6 +199,12 @@ const TreasureMap = () => {
           />
         </motion.div>
       </div>
+      
+      {/* Info Sheet */}
+      <InfoSheet 
+        isOpen={isInfoSheetOpen} 
+        onClose={() => setIsInfoSheetOpen(false)} 
+      />
     </div>
   );
 };

@@ -46,6 +46,16 @@ export interface ContactInfo {
   avatar?: string;
 }
 
+export interface WorkExperienceItem {
+  id: string;
+  role: string;
+  company: string;
+  period: string;
+  description: string;
+  technologies: string[];
+  coordinates: { x: number; y: number };
+}
+
 // Replace this data with your actual information
 export const contactInfo: ContactInfo = {
   name: "Gulam Mohammad",
@@ -180,3 +190,36 @@ export const skillItems: SkillItem[] = [
     coordinates: { x: 84, y: 22 }
   }
 ];
+
+export const workExperienceItems: WorkExperienceItem[] = [
+  {
+    id: "work1",
+    role: "Senior Frontend Developer",
+    company: "Global Innovation Technologies",
+    period: "2021 - Present",
+    description: "Leading the development of web applications using React and TypeScript. Implementing responsive designs, improving performance, and mentoring junior developers.",
+    technologies: ["React", "TypeScript", "Redux", "Next.js"],
+    coordinates: { x: 25, y: 20 }
+  },
+  {
+    id: "work2",
+    role: "Frontend Developer",
+    company: "Digital Solutions Inc.",
+    period: "2018 - 2021",
+    description: "Developed and maintained multiple web applications. Collaborated with UX/UI designers to implement responsive interfaces and improved user experience.",
+    technologies: ["React", "JavaScript", "CSS3", "HTML5"],
+    coordinates: { x: 45, y: 25 }
+  },
+  {
+    id: "work3",
+    role: "Web Developer Intern",
+    company: "TechStart",
+    period: "2017 - 2018",
+    description: "Assisted in building web applications and learned modern frontend development practices. Contributed to internal tools development.",
+    technologies: ["JavaScript", "HTML", "CSS", "jQuery"],
+    coordinates: { x: 65, y: 30 }
+  }
+];
+
+export const resumeUrl = "https://drive.google.com/file/d/example/view"; // Replace with your actual resume URL
+
