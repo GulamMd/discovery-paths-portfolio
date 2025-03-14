@@ -72,19 +72,27 @@ export const contactInfo: ContactInfo = {
 export const educationItems: EducationItem[] = [
   {
     id: "edu1",
-    title: "Bachelor's Degree in Computer Science",
+    title: "Bachelor's Degree in Electronics and Communication Engineering",
     institution: "Institute of engineering and management,Kolkata",
     period: "2018 - 2022",
-    description: "Studied computer science with a focus on web development and user experience design. Graduated with honors.",
+    description: "Studied electronics engineering with a focus on web development and user experience design with other computer science tools and programming. Graduated with honors.",
     coordinates: { x: 22, y: 32 }
   },
   {
     id: "edu2",
-    title: "Web Development Bootcamp",
-    institution: "Coding Academy",
-    period: "2020",
-    description: "Intensive 3-month program focused on modern frontend technologies and best practices.",
+    title: "Higher Secondary",
+    institution: "S R Vidya Mandir, Bhagalpur, Bihar",
+    period: "2015 - 2017",
+    description: "Completed my 11th and 12th with Mathematics, Physics and Chemistry major",
     coordinates: { x: 38, y: 28 }
+  },
+  {
+    id: "edu2",
+    title: "Secondary School",
+    institution: "D A A High School, Banka, Bihar",
+    period: "2015",
+    description: "Completed my 10th with Science, Mathematics and Social Science major",
+    coordinates: { x: 54, y: 24 }
   }
 ];
 
@@ -195,31 +203,13 @@ export const workExperienceItems: WorkExperienceItem[] = [
   {
     id: "work1",
     role: "Senior Frontend Developer",
-    company: "Global Innovation Technologies",
-    period: "2021 - Present",
+    company: "Global IDs",
+    period: "Dec 2021 - Present",
     description: "Leading the development of web applications using React and TypeScript. Implementing responsive designs, improving performance, and mentoring junior developers.",
-    technologies: ["React", "TypeScript", "Redux", "Next.js"],
+    technologies: ["React", "TypeScript", "Redux", "Vue.js", "JavaScript"],
     coordinates: { x: 25, y: 20 }
   },
-  {
-    id: "work2",
-    role: "Frontend Developer",
-    company: "Digital Solutions Inc.",
-    period: "2018 - 2021",
-    description: "Developed and maintained multiple web applications. Collaborated with UX/UI designers to implement responsive interfaces and improved user experience.",
-    technologies: ["React", "JavaScript", "CSS3", "HTML5"],
-    coordinates: { x: 45, y: 25 }
-  },
-  {
-    id: "work3",
-    role: "Web Developer Intern",
-    company: "TechStart",
-    period: "2017 - 2018",
-    description: "Assisted in building web applications and learned modern frontend development practices. Contributed to internal tools development.",
-    technologies: ["JavaScript", "HTML", "CSS", "jQuery"],
-    coordinates: { x: 65, y: 30 }
-  }
 ];
 
-export const resumeUrl = "https://drive.google.com/file/d/example/view"; // Replace with your actual resume URL
+export const resumeUrl = "https://drive.google.com/file/d/1HZn36Wlluc4RbofuaG0NHpj9gAF7T4EL/view?usp=drive_link";
 

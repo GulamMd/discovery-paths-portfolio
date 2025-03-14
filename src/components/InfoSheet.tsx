@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Briefcase, GraduationCap, Award, FileText, ExternalLink } from "lucide-react";
@@ -82,7 +81,7 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
                 transition={{ duration: 0.4 }}
               >
                 <h3 className="font-display text-xl text-navy-dark mb-4">Work Experience</h3>
-                <Accordion type="single" collapsible className="w-full">
+                <Accordion type="single" collapsible className="w-full" defaultValue={workExperienceItems[0]?.id}>
                   {workExperienceItems.map((item, index) => (
                     <AccordionItem 
                       key={item.id} 
@@ -128,7 +127,7 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
                 transition={{ duration: 0.4 }}
               >
                 <h3 className="font-display text-xl text-navy-dark mb-4">Education</h3>
-                <Accordion type="single" collapsible className="w-full">
+                <Accordion type="single" collapsible className="w-full" defaultValue={educationItems[0]?.id}>
                   {educationItems.map((item, index) => (
                     <AccordionItem 
                       key={item.id} 

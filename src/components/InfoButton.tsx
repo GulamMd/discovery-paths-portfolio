@@ -9,7 +9,7 @@ interface InfoButtonProps {
 const InfoButton = ({ onClick }: InfoButtonProps) => {
   return (
     <motion.div
-      className="absolute top-28 right-5 z-30"
+      className="absolute top-80 right-5 z-30"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 1, duration: 0.5 }}
