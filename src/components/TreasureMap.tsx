@@ -12,11 +12,13 @@ import {
 
 const TreasureMap = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [activeAirdrops, setActiveAirdrops] = useState<Array<{ id: string; project: typeof projectItems[0]; delay: number }>>([]);
   const mapRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const parallaxPosition = useParallaxEffect(40);
   const controls = useAnimation();
-
+  
+  // Initial animation
   useEffect(() => {
     controls.start({
       opacity: 1,
@@ -24,6 +26,49 @@ const TreasureMap = () => {
       transition: { duration: 1, ease: "easeOut" },
     });
   }, [controls]);
+  
+  // Initialize airdrop system 
+  useEffect(() => {
+    // Start with one airdrop
+    addRandomAirdrop();
+    
+    // Set up interval for continuous airdrops
+    const interval = setInterval(() => {
+      if (activeAirdrops.length < 3) { // Limit concurrent airdrops
+        addRandomAirdrop();
+      }
+    }, 5000); // Add new airdrop every 5 seconds if below limit
+    
+    return () => clearInterval(interval);
+  }, [activeAirdrops.length]);
+  
+  // Function to add a random airdrop
+  const addRandomAirdrop = () => {
+    const randomIndex = Math.floor(Math.random() * projectItems.length);
+    const randomDelay = Math.random() * 2; // Random delay between 0-2 seconds
+    const randomX = Math.random() * 80 + 10; // Random x position 10-90%
+    
+    const selectedProject = {
+      ...projectItems[randomIndex],
+      coordinates: { 
+        ...projectItems[randomIndex].coordinates,
+        x: randomX 
+      }
+    };
+    
+    const newAirdrop = {
+      id: `airdrop-${Date.now()}-${Math.random()}`,
+      project: selectedProject,
+      delay: randomDelay
+    };
+    
+    setActiveAirdrops(prev => [...prev, newAirdrop]);
+    
+    // Remove airdrop after it's done (generous timeout)
+    setTimeout(() => {
+      setActiveAirdrops(prev => prev.filter(item => item.id !== newAirdrop.id));
+    }, 15000); // Timeout after 15 seconds (longer than drop animation)
+  };
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -111,21 +156,20 @@ const TreasureMap = () => {
             <Fullscreen className="text-treasure-red h-6 w-6" />
           </motion.button>
 
-          {/* Project airdrops - using staggered start for initial drops */}
+          {/* Active airdrops */}
           <div className="relative z-10">
-            {projectItems.map((item, index) => (
-              <div key={item.id}>
-                <ProjectAirdrop
-                  id={item.id}
-                  title={item.title}
-                  description={item.description}
-                  technologies={item.technologies}
-                  image={item.image}
-                  link={item.link}
-                  x={item.coordinates.x}
-                  y={item.coordinates.y}
-                />
-              </div>
+            {activeAirdrops.map((airdrop) => (
+              <ProjectAirdrop
+                key={airdrop.id}
+                id={airdrop.id}
+                title={airdrop.project.title}
+                description={airdrop.project.description}
+                technologies={airdrop.project.technologies}
+                image={airdrop.project.image}
+                link={airdrop.project.link}
+                x={airdrop.project.coordinates.x}
+                y={airdrop.project.coordinates.y}
+              />
             ))}
           </div>
 

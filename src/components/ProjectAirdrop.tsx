@@ -4,7 +4,6 @@ import { ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { useParachuteAnimation } from '@/utils/animations';
 
 interface ProjectAirdropProps {
   id: string;
@@ -29,60 +28,111 @@ export const ProjectAirdrop = ({
 }: ProjectAirdropProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const { 
-    isDropping, 
-    position, 
-    resetDrop, 
-    completeDrop 
-  } = useParachuteAnimation(x, y);
+  const [isDropping, setIsDropping] = useState(true);
+  const [position, setPosition] = useState({ x, y: 0 });
+  const [reachedBottom, setReachedBottom] = useState(false);
+  const airdropRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<HTMLDivElement | null>(null);
+
+  // Get reference to the map container
+  useEffect(() => {
+    mapRef.current = document.querySelector('.treasure-map');
+  }, []);
+
+  // Initial setup and drop animation
+  useEffect(() => {
+    // Set random initial x position
+    const randomX = Math.random() * 80 + 10; // Random x between 10% and 90%
+    setPosition({ x: randomX, y: 0 });
+    setIsDropping(true);
+    setReachedBottom(false);
+  }, []);
+
+  // Handle checking if airdrop reached bottom of screen
+  useEffect(() => {
+    if (!isDropping || !airdropRef.current || !mapRef.current || isHovered) return;
+
+    const checkPosition = () => {
+      if (!airdropRef.current || !mapRef.current) return;
+      
+      const airdropRect = airdropRef.current.getBoundingClientRect();
+      const mapRect = mapRef.current.getBoundingClientRect();
+      
+      // Check if bottom of airdrop reached bottom of map (with some margin)
+      if (airdropRect.bottom >= mapRect.bottom - 20) {
+        setReachedBottom(true);
+        setIsDropping(false);
+        
+        // Pop and reset after a delay
+        setTimeout(() => {
+          setIsVisible(false);
+          
+          // Reset after pop animation completes
+          setTimeout(() => {
+            // New random position for next drop
+            const newX = Math.random() * 80 + 10;
+            setPosition({ x: newX, y: 0 });
+            setIsVisible(true);
+            setIsDropping(true);
+            setReachedBottom(false);
+          }, 700);
+        }, 1000);
+      }
+    };
+
+    // Check position every animation frame
+    let animationFrame: number;
+    const animate = () => {
+      checkPosition();
+      animationFrame = requestAnimationFrame(animate);
+    };
+    
+    animationFrame = requestAnimationFrame(animate);
+    
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [isDropping, isHovered]);
 
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
+          ref={airdropRef}
           className="airdrop absolute"
           style={{
             left: `${position.x}%`,
-            top: isDropping ? "-10%" : `${position.y}%`,
-            pointerEvents: isDropping ? "none" : "auto",
+            top: `${isDropping && !isHovered ? (isHovered ? position.y : "auto") : position.y}%`,
+            pointerEvents: "auto",
           }}
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 0, top: "-10%" }}
           animate={
-            isDropping 
-              ? { y: [`-10vh`, `${position.y + 5}vh`], opacity: 1, transition: { duration: 5, ease: "easeOut" } } 
-              : { opacity: 1 }
+            isDropping && !isHovered
+              ? { 
+                  y: ["0vh", `${window.innerHeight}px`], 
+                  opacity: 1, 
+                  transition: { 
+                    y: { duration: 7, ease: "linear" },
+                    opacity: { duration: 0.5 }
+                  } 
+                } 
+              : { 
+                  opacity: 1,
+                  y: isHovered ? "0" : "auto"
+                }
           }
           exit={{ 
             scale: [1, 1.2, 0], 
             opacity: [1, 1, 0], 
             transition: { duration: 0.7, ease: "backOut" } 
           }}
-          onAnimationComplete={() => {
-            if (!isDropping && !isHovered) {
-              // After drop is complete, trigger the pop animation after a delay
-              setTimeout(() => {
-                setIsVisible(false);
-                // After pop animation, reset the drop with a delay
-                setTimeout(() => {
-                  setIsVisible(true);
-                  resetDrop();
-                }, 500);
-              }, 1000);
-            }
-          }}
           onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => {
-            setIsHovered(false);
-            // When mouse leaves and drop is complete, start the disappear countdown
-            if (!isDropping) {
-              completeDrop();
-            }
-          }}
+          onMouseLeave={() => setIsHovered(false)}
         >
           <HoverCard>
             <HoverCardTrigger asChild>
               <div className="flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-110">
-                {/* Parachute - INCREASED SIZE */}
+                {/* Parachute - Consistent size */}
                 <div className="w-24 h-20 mb-1">
                   <img 
                     src="./lovable-uploads/Untitled design.svg" 
