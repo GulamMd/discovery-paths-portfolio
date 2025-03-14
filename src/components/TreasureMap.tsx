@@ -111,9 +111,9 @@ const TreasureMap = () => {
             <Fullscreen className="text-treasure-red h-6 w-6" />
           </motion.button>
 
-          {/* Project airdrops */}
+          {/* Project airdrops - using staggered start for initial drops */}
           <div className="relative z-10">
-            {projectItems.map((item) => (
+            {projectItems.map((item, index) => (
               <div key={item.id}>
                 <ProjectAirdrop
                   id={item.id}
@@ -136,24 +136,13 @@ const TreasureMap = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
           />
+          
+          {/* Ship decoration */}
           <motion.div
             className="absolute bottom-1/3 left-1/5 w-24 h-24 opacity-15 bg-contain bg-center bg-no-repeat pointer-events-none"
             style={{ backgroundImage: "url('/ship.svg')" }}
             animate={{ x: [0, 10, 0], y: [0, -5, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          />
-          
-          {/* New decorative elements */}
-          <motion.div
-            className="absolute top-1/3 left-1/4 w-16 h-16 opacity-10 bg-contain bg-center bg-no-repeat pointer-events-none"
-            style={{ backgroundImage: "url('./lovable-uploads/fb4f8322-d626-4068-8c5d-888b136d76b8.png')" }}
-            animate={{ rotate: [-5, 5, -5] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 right-1/3 w-20 h-20 opacity-15 bg-treasure-gold blur-md rounded-full pointer-events-none"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.05, 0.1, 0.05] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
       </div>

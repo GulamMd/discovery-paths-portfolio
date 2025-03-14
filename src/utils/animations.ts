@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 export function useIntersectionObserver(
   options: IntersectionObserverInit = {
@@ -76,31 +75,47 @@ export function useRandomFloatAnimation(
   return style;
 }
 
-export function useParachuteDrop(
-  initialY: number = -200,
-  finalY: number = 0,
-  duration: number = 3
-) {
-  const [y, setY] = useState(initialY);
+export function useParachuteAnimation(initialX: number, targetY: number) {
   const [isDropping, setIsDropping] = useState(true);
-  
+  const [position, setPosition] = useState({ x: initialX, y: 0 });
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const dropCompleteRef = useRef(false);
+
   useEffect(() => {
-    if (isDropping) {
-      const timer = setTimeout(() => {
-        setY(finalY);
-        setIsDropping(false);
-      }, duration * 1000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isDropping, finalY, duration]);
-  
+    const randomX = initialX + (Math.random() * 20 - 10);
+    setPosition({ x: randomX, y: 0 });
+    
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setIsDropping(false);
+      dropCompleteRef.current = true;
+    }, 5000 + Math.random() * 3000);
+    
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [initialX]);
+
   const resetDrop = () => {
-    setY(initialY);
+    const newX = Math.random() * 80 + 10;
+    setPosition({ x: newX, y: 0 });
     setIsDropping(true);
+    dropCompleteRef.current = false;
+    
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setIsDropping(false);
+      dropCompleteRef.current = true;
+    }, 5000 + Math.random() * 3000);
+  };
+
+  const completeDrop = () => {
+    if (!isDropping && !dropCompleteRef.current) {
+      dropCompleteRef.current = true;
+    }
   };
   
-  return { y, isDropping, resetDrop };
+  return { isDropping, position, resetDrop, completeDrop };
 }
 
 export function useRotateAnimation(
