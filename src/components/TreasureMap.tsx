@@ -30,11 +30,13 @@ const TreasureMap = () => {
   // Initialize airdrop system 
   useEffect(() => {
     // Start with one airdrop
-    addRandomAirdrop();
+    if (activeAirdrops.length === 0) {
+      addRandomAirdrop();
+    }
     
     // Set up interval for continuous airdrops
     const interval = setInterval(() => {
-      if (activeAirdrops.length < 3) { // Limit concurrent airdrops
+      if (activeAirdrops.length < 3) { // Limit concurrent airdrops to 3
         addRandomAirdrop();
       }
     }, 5000); // Add new airdrop every 5 seconds if below limit
@@ -63,11 +65,11 @@ const TreasureMap = () => {
     };
     
     setActiveAirdrops(prev => [...prev, newAirdrop]);
-    
-    // Remove airdrop after it's done (generous timeout)
-    setTimeout(() => {
-      setActiveAirdrops(prev => prev.filter(item => item.id !== newAirdrop.id));
-    }, 15000); // Timeout after 15 seconds (longer than drop animation)
+  };
+
+  // Function to remove an airdrop
+  const removeAirdrop = (id: string) => {
+    setActiveAirdrops(prev => prev.filter(item => item.id !== id));
   };
 
   const toggleFullscreen = () => {
@@ -169,6 +171,7 @@ const TreasureMap = () => {
                 link={airdrop.project.link}
                 x={airdrop.project.coordinates.x}
                 y={airdrop.project.coordinates.y}
+                onComplete={() => removeAirdrop(airdrop.id)}
               />
             ))}
           </div>

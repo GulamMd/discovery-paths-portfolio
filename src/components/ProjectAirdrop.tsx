@@ -14,6 +14,7 @@ interface ProjectAirdropProps {
   link?: string;
   x: number;
   y: number;
+  onComplete?: () => void;
 }
 
 export const ProjectAirdrop = ({
@@ -24,7 +25,8 @@ export const ProjectAirdrop = ({
   image,
   link,
   x,
-  y
+  y,
+  onComplete
 }: ProjectAirdropProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -41,16 +43,15 @@ export const ProjectAirdrop = ({
 
   // Initial setup and drop animation
   useEffect(() => {
-    // Set random initial x position
-    const randomX = Math.random() * 80 + 10; // Random x between 10% and 90%
-    setPosition({ x: randomX, y: 0 });
+    // Set initial x position
+    setPosition({ x, y: 0 });
     setIsDropping(true);
     setReachedBottom(false);
-  }, []);
+  }, [x]);
 
   // Handle checking if airdrop reached bottom of screen
   useEffect(() => {
-    if (!isDropping || !airdropRef.current || !mapRef.current || isHovered) return;
+    if (!isDropping || !airdropRef.current || !mapRef.current) return;
 
     const checkPosition = () => {
       if (!airdropRef.current || !mapRef.current) return;
@@ -67,32 +68,30 @@ export const ProjectAirdrop = ({
         setTimeout(() => {
           setIsVisible(false);
           
-          // Reset after pop animation completes
-          setTimeout(() => {
-            // New random position for next drop
-            const newX = Math.random() * 80 + 10;
-            setPosition({ x: newX, y: 0 });
-            setIsVisible(true);
-            setIsDropping(true);
-            setReachedBottom(false);
-          }, 700);
+          // Call onComplete callback to remove this airdrop
+          if (onComplete) {
+            onComplete();
+          }
         }, 1000);
       }
     };
 
-    // Check position every animation frame
-    let animationFrame: number;
-    const animate = () => {
-      checkPosition();
+    // Only run animation if not hovered
+    if (!isHovered) {
+      // Check position every animation frame
+      let animationFrame: number;
+      const animate = () => {
+        checkPosition();
+        animationFrame = requestAnimationFrame(animate);
+      };
+      
       animationFrame = requestAnimationFrame(animate);
-    };
-    
-    animationFrame = requestAnimationFrame(animate);
-    
-    return () => {
-      cancelAnimationFrame(animationFrame);
-    };
-  }, [isDropping, isHovered]);
+      
+      return () => {
+        cancelAnimationFrame(animationFrame);
+      };
+    }
+  }, [isDropping, isHovered, onComplete]);
 
   return (
     <AnimatePresence>
@@ -102,7 +101,6 @@ export const ProjectAirdrop = ({
           className="airdrop absolute"
           style={{
             left: `${position.x}%`,
-            top: `${isDropping && !isHovered ? (isHovered ? position.y : "auto") : position.y}%`,
             pointerEvents: "auto",
           }}
           initial={{ opacity: 0, top: "-10%" }}
@@ -112,13 +110,13 @@ export const ProjectAirdrop = ({
                   y: ["0vh", `${window.innerHeight}px`], 
                   opacity: 1, 
                   transition: { 
-                    y: { duration: 7, ease: "linear" },
+                    y: { duration: 8, ease: "linear" },
                     opacity: { duration: 0.5 }
                   } 
                 } 
               : { 
                   opacity: 1,
-                  y: isHovered ? "0" : "auto"
+                  y: isHovered ? "auto" : "auto" // Don't move when hovered
                 }
           }
           exit={{ 
@@ -133,7 +131,7 @@ export const ProjectAirdrop = ({
             <HoverCardTrigger asChild>
               <div className="flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-110">
                 {/* Parachute - Consistent size */}
-                <div className="w-24 h-20 mb-1">
+                <div className="w-24 h-20 mb-1 drop-shadow-lg">
                   <img 
                     src="./lovable-uploads/Untitled design.svg" 
                     alt="Parachute treasure" 
