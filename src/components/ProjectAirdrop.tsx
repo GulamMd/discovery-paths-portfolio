@@ -131,7 +131,7 @@ export const ProjectAirdrop = ({
             <HoverCardTrigger asChild>
               <div className="flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-110">
                 {/* Parachute - Consistent size */}
-                <div className="w-24 h-20 mb-1 drop-shadow-lg">
+                <div className="w-16 h-12 mb-1 drop-shadow-lg">
                   <img 
                     src="./lovable-uploads/Untitled design.svg" 
                     alt="Parachute treasure" 
