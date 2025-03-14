@@ -17,10 +17,10 @@ const Index = () => {
     
     // Airdrop toast
     const timer2 = setTimeout(() => {
-      toast("Treasure Airdrops!", {
-        description: "Watch for treasure chests continuously dropping from the sky. Hover over them before they disappear!",
+      toast("Treasure Airdrops Incoming!", {
+        description: "Look for the LARGE treasure chests with parachutes dropping randomly from the sky. Hover over them before they disappear!",
         position: "bottom-center",
-        duration: 6000,
+        duration: 8000,
       });
     }, 4000);
     

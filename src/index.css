@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Permanent+Marker&family=Pirata+One&display=swap');
 
 @tailwind base;
@@ -166,13 +167,13 @@
 
   .airdrop {
     @apply flex flex-col items-center justify-center cursor-pointer;
-    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
     z-index: 30;
   }
 
   .airdrop:hover {
     @apply scale-110;
-    filter: drop-shadow(0 7px 15px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
   }
 
   /* Parachute animation */
