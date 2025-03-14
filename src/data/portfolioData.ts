@@ -60,7 +60,7 @@ export interface WorkExperienceItem {
 export const contactInfo: ContactInfo = {
   name: "Gulam Mohammad",
   title: "Frontend Developer",
-  email: "gulam.khalid@globalids.com",
+  email: "gulammohammadkhalid@gmail.com",
   phone: "+91 8298102935",
   github: "https://github.com/GulamMd",
   linkedin: "https://www.linkedin.com/in/gulammohammadkhalid/",

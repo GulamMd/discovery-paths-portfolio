@@ -127,7 +127,7 @@ export const ContactsSection = ({ contactInfo }: ContactsSectionProps) => {
                   whileHover={{ x: 3 }}
                 >
                   <Mail size={16} className="text-treasure-red" /> 
-                  <span>{contactInfo.email}</span>
+                  <span className='break-words w-[210px]'>{contactInfo.email}</span>
                 </motion.a>
               )}
               
