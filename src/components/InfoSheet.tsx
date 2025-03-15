@@ -1,14 +1,17 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Briefcase, GraduationCap, Award, FileText, ExternalLink } from "lucide-react";
+import { X, Briefcase, GraduationCap, Award, FileText, ExternalLink, Code } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { useParallaxEffect } from "@/utils/animations";
 import { 
   workExperienceItems, 
   educationItems, 
-  resumeUrl 
+  resumeUrl,
+  projectItems 
 } from "@/data/portfolioData";
 
 interface InfoSheetProps {
@@ -42,7 +45,7 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
         </SheetHeader>
 
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-3 bg-parchment-dark/20 border border-treasure-brown/30 mb-6">
+          <TabsList className="w-full grid grid-cols-4 bg-parchment-dark/20 border border-treasure-brown/30 mb-6">
             <TabsTrigger 
               value="experience" 
               className="font-medium flex items-center gap-2 data-[state=active]:bg-parchment-light data-[state=active]:text-treasure-red"
@@ -56,6 +59,13 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
             >
               <GraduationCap size={16} />
               <span className="hidden sm:inline">Education</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="projects" 
+              className="font-medium flex items-center gap-2 data-[state=active]:bg-parchment-light data-[state=active]:text-treasure-red"
+            >
+              <Code size={16} />
+              <span className="hidden sm:inline">Projects</span>
             </TabsTrigger>
             <TabsTrigger 
               value="resume" 
@@ -152,6 +162,70 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
                     </AccordionItem>
                   ))}
                 </Accordion>
+              </motion.div>
+            </TabsContent>
+
+            {/* New Projects Tab */}
+            <TabsContent value="projects" className="mt-0">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <h3 className="font-display text-xl text-navy-dark mb-4">Projects</h3>
+                
+                <div className="grid grid-cols-1 gap-4">
+                  {projectItems.map((project) => (
+                    <motion.div
+                      key={project.id}
+                      className="relative bg-parchment-light p-4 rounded-lg border border-treasure-brown shadow-sm hover:shadow-md transition-all"
+                      whileHover={{ scale: 1.02 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <div className="flex flex-col">
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-medium text-lg text-navy-dark">{project.title}</h4>
+                          {project.link && (
+                            <a 
+                              href={project.link} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-treasure-gold hover:text-treasure-red transition-colors"
+                            >
+                              <ExternalLink size={18} />
+                            </a>
+                          )}
+                        </div>
+                        
+                        {project.image && (
+                          <div className="w-full h-32 mb-3 rounded-md overflow-hidden">
+                            <img 
+                              src={project.image} 
+                              alt={project.title} 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        
+                        <p className="text-sm text-treasure-brown mb-3">{project.description}</p>
+                        
+                        <div className="flex flex-wrap gap-2 mt-auto">
+                          {project.technologies.map((tech, index) => (
+                            <Badge 
+                              key={index} 
+                              variant="outline"
+                              className="bg-navy-light/10 text-navy-dark border-navy-light/30 text-xs"
+                            >
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
             </TabsContent>
 
