@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Fullscreen } from "lucide-react";
@@ -6,7 +7,6 @@ import ProjectAirdrop from "./ProjectAirdrop";
 import ContactsSection from "./ContactsSection";
 import InfoButton from "./InfoButton";
 import InfoSheet from "./InfoSheet";
-import ConnectedMapMarkers from "./ConnectedMapMarkers";
 import {
   contactInfo,
   projectItems,
@@ -21,6 +21,7 @@ const TreasureMap = () => {
   const parallaxPosition = useParallaxEffect(40);
   const controls = useAnimation();
   
+  // Initial animation
   useEffect(() => {
     controls.start({
       opacity: 1,
@@ -29,24 +30,28 @@ const TreasureMap = () => {
     });
   }, [controls]);
   
+  // Initialize airdrop system 
   useEffect(() => {
+    // Start with one airdrop
     if (activeAirdrops.length === 0) {
       addRandomAirdrop();
     }
     
+    // Set up interval for continuous airdrops
     const interval = setInterval(() => {
-      if (activeAirdrops.length < 3) {
+      if (activeAirdrops.length < 3) { // Limit concurrent airdrops to 3
         addRandomAirdrop();
       }
-    }, 5000);
+    }, 5000); // Add new airdrop every 5 seconds if below limit
     
     return () => clearInterval(interval);
   }, [activeAirdrops.length]);
   
+  // Function to add a random airdrop
   const addRandomAirdrop = () => {
     const randomIndex = Math.floor(Math.random() * projectItems.length);
-    const randomDelay = Math.random() * 2;
-    const randomX = Math.random() * 80 + 10;
+    const randomDelay = Math.random() * 2; // Random delay between 0-2 seconds
+    const randomX = Math.random() * 80 + 10; // Random x position 10-90%
     
     const selectedProject = {
       ...projectItems[randomIndex],
@@ -65,6 +70,7 @@ const TreasureMap = () => {
     setActiveAirdrops(prev => [...prev, newAirdrop]);
   };
 
+  // Function to remove an airdrop
   const removeAirdrop = (id: string) => {
     setActiveAirdrops(prev => prev.filter(item => item.id !== id));
   };
@@ -81,6 +87,7 @@ const TreasureMap = () => {
     }
   };
 
+  // Listen for fullscreen change events
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -106,15 +113,16 @@ const TreasureMap = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={controls}
         >
+          {/* Background maps and textures */}
           <div className="absolute inset-0 bg-parchment">
             <div className="absolute inset-0 bg-[url('./lovable-uploads/Treasure_Map.jpg')] bg-cover bg-center opacity-90"></div>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-parchment-dark/20"></div>
           </div>
 
+          {/* Map border effect */}
           <div className="map-border"></div>
 
-          <ConnectedMapMarkers />
-
+          {/* Compass rose */}
           <motion.div
             className="absolute bottom-10 left-10 z-10 w-24 h-24 bg-[url('/compass-rose.svg')] bg-contain bg-center bg-no-repeat opacity-60"
             initial={{ opacity: 0, scale: 0 }}
@@ -122,6 +130,7 @@ const TreasureMap = () => {
             transition={{ delay: 1, duration: 0.8, ease: "backOut" }}
           />
 
+          {/* Title */}
           <motion.div
             className="absolute top-5 left-5 md:top-10 md:left-10 z-20"
             initial={{ opacity: 0, x: -20 }}
@@ -136,10 +145,13 @@ const TreasureMap = () => {
             </p>
           </motion.div>
 
+          {/* Contact info */}
           <ContactsSection contactInfo={contactInfo} />
           
+          {/* Info Button */}
           <InfoButton onClick={() => setIsInfoSheetOpen(true)} />
 
+          {/* Fullscreen toggle */}
           <motion.button
             onClick={toggleFullscreen}
             className="absolute top-5 right-5 md:top-5 md:right-5 z-20 bg-parchment-light border-2 border-treasure-brown rounded-full p-2 shadow-md hover:border-treasure-gold"
@@ -152,6 +164,7 @@ const TreasureMap = () => {
             <Fullscreen className="text-treasure-red h-6 w-6" />
           </motion.button>
 
+          {/* Active airdrops */}
           <div className="relative z-10">
             {activeAirdrops.map((airdrop) => (
               <ProjectAirdrop
@@ -169,6 +182,7 @@ const TreasureMap = () => {
             ))}
           </div>
 
+          {/* Decorative elements */}
           <motion.div
             className="absolute top-1/4 right-1/4 w-32 h-32 opacity-20 bg-contain bg-center bg-no-repeat pointer-events-none"
             style={{ backgroundImage: "url('/compass-rose.svg')" }}
@@ -176,6 +190,7 @@ const TreasureMap = () => {
             transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
           />
           
+          {/* Ship decoration */}
           <motion.div
             className="absolute bottom-1/3 left-1/5 w-24 h-24 opacity-15 bg-contain bg-center bg-no-repeat pointer-events-none"
             style={{ backgroundImage: "url('/ship.svg')" }}
@@ -185,6 +200,7 @@ const TreasureMap = () => {
         </motion.div>
       </div>
       
+      {/* Info Sheet */}
       <InfoSheet 
         isOpen={isInfoSheetOpen} 
         onClose={() => setIsInfoSheetOpen(false)} 
