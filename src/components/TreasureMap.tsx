@@ -1,7 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { Fullscreen } from "lucide-react";
+import { Fullscreen, Compass, Send, Map, Anchor, X } from "lucide-react";
 import { useParallaxEffect } from "@/utils/animations";
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import ProjectAirdrop from "./ProjectAirdrop";
 import InfoAirdrop from "./InfoAirdrop";
 import ContactsSection from "./ContactsSection";
@@ -12,29 +14,83 @@ import {
   projectItems,
   educationItems,
   workExperienceItems,
-  resumeUrl
+  resumeUrl,
 } from "@/data/portfolioData";
+import { handleChat } from "@/utils/chatHandler"; // Import the utility function
 
 const TreasureMap = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [activeAirdrops, setActiveAirdrops] = useState<Array<{ id: string; project: typeof projectItems[0]; delay: number }>>([]);
-  const [activeInfoAirdrops, setActiveInfoAirdrops] = useState<Array<{
-    id: string;
-    type: 'education' | 'work' | 'resume';
-    title: string;
-    subtitle: string;
-    description: string;
-    x: number;
-    y: number;
-    delay: number;
-    onClick?: () => void;
-  }>>([]);
+  const [activeAirdrops, setActiveAirdrops] = useState<
+    Array<{ id: string; project: (typeof projectItems)[0]; delay: number }>
+  >([]);
+  const [activeInfoAirdrops, setActiveInfoAirdrops] = useState<
+    Array<{
+      id: string;
+      type: "education" | "work" | "resume";
+      title: string;
+      subtitle: string;
+      description: string;
+      x: number;
+      y: number;
+      delay: number;
+      onClick?: () => void;
+    }>
+  >([]);
   const [isInfoSheetOpen, setIsInfoSheetOpen] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const parallaxPosition = useParallaxEffect(40);
   const controls = useAnimation();
-  
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      content:
+        "Ahoy there, matey! Welcome to the treasure hunt! I'm your guide to finding the hidden treasures on this portfolio. Ask me about skills, projects, or say 'start hunt' to begin your adventure!",
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const toggleChat = () => setIsOpen(!isOpen);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const newMessages = [...messages, { role: "user", content: input }];
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Call the chat handler directly
+      const response = await handleChat(newMessages);
+
+      // Update the messages with the assistant's response
+      setMessages([
+        ...newMessages,
+        { role: "assistant", content: response },
+      ]);
+    } catch (err: any) {
+      console.error("Chat Error:", err);
+      setError(`Arr! Something went wrong: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Initial animation
   useEffect(() => {
     controls.start({
@@ -43,21 +99,22 @@ const TreasureMap = () => {
       transition: { duration: 1, ease: "easeOut" },
     });
   }, [controls]);
-  
-  // Initialize airdrop system 
+
+  // Initialize airdrop system
   useEffect(() => {
     // Start with one airdrop
     if (activeAirdrops.length === 0) {
       addRandomAirdrop();
     }
-    
+
     // Set up interval for continuous airdrops
     const interval = setInterval(() => {
-      if (activeAirdrops.length < 3) { // Limit concurrent airdrops to 3
+      if (activeAirdrops.length < 3) {
+        // Limit concurrent airdrops to 3
         addRandomAirdrop();
       }
     }, 5000); // Add new airdrop every 5 seconds if below limit
-    
+
     return () => clearInterval(interval);
   }, [activeAirdrops.length]);
 
@@ -67,38 +124,39 @@ const TreasureMap = () => {
     if (activeInfoAirdrops.length === 0) {
       addRandomInfoAirdrop();
     }
-    
+
     // Set up interval for continuous info airdrops
     const interval = setInterval(() => {
-      if (activeInfoAirdrops.length < 2) { // Limit concurrent info airdrops to 2
+      if (activeInfoAirdrops.length < 2) {
+        // Limit concurrent info airdrops to 2
         addRandomInfoAirdrop();
       }
     }, 8000); // Add new info airdrop every 8 seconds if below limit
-    
+
     return () => clearInterval(interval);
   }, [activeInfoAirdrops.length]);
-  
+
   // Function to add a random airdrop
   const addRandomAirdrop = () => {
     const randomIndex = Math.floor(Math.random() * projectItems.length);
     const randomDelay = Math.random() * 2; // Random delay between 0-2 seconds
     const randomX = Math.random() * 80 + 10; // Random x position 10-90%
-    
+
     const selectedProject = {
       ...projectItems[randomIndex],
-      coordinates: { 
+      coordinates: {
         ...projectItems[randomIndex].coordinates,
-        x: randomX 
-      }
+        x: randomX,
+      },
     };
-    
+
     const newAirdrop = {
       id: `airdrop-${Date.now()}-${Math.random()}`,
       project: selectedProject,
-      delay: randomDelay
+      delay: randomDelay,
     };
-    
-    setActiveAirdrops(prev => [...prev, newAirdrop]);
+
+    setActiveAirdrops((prev) => [...prev, newAirdrop]);
   };
 
   // Function to add a random info airdrop
@@ -107,33 +165,36 @@ const TreasureMap = () => {
     const randomX = Math.random() * 80 + 10; // Random x position 10-90%
 
     // Determine type of info airdrop
-    const types = ['education', 'work', 'resume'] as const;
+    const types = ["education", "work", "resume"] as const;
     const randomTypeIndex = Math.floor(Math.random() * types.length);
     const type = types[randomTypeIndex];
 
-    let title = '';
-    let subtitle = '';
-    let description = '';
+    let title = "";
+    let subtitle = "";
+    let description = "";
     let onClick: (() => void) | undefined;
 
     // Set content based on type
-    if (type === 'education') {
+    if (type === "education") {
       const randomEduIndex = Math.floor(Math.random() * educationItems.length);
       const item = educationItems[randomEduIndex];
       title = item.title;
       subtitle = `${item.institution} • ${item.period}`;
       description = item.description;
-    } else if (type === 'work') {
-      const randomWorkIndex = Math.floor(Math.random() * workExperienceItems.length);
+    } else if (type === "work") {
+      const randomWorkIndex = Math.floor(
+        Math.random() * workExperienceItems.length
+      );
       const item = workExperienceItems[randomWorkIndex];
       title = item.role;
       subtitle = `${item.company} • ${item.period}`;
       description = item.description;
-    } else if (type === 'resume') {
-      title = 'My Resume';
-      subtitle = 'Click to view my full resume';
-      description = 'Comprehensive overview of my skills, experience, and qualifications.';
-      onClick = () => window.open(resumeUrl, '_blank'); // Open resume in a new tab
+    } else if (type === "resume") {
+      title = "My Resume";
+      subtitle = "Click to view my full resume";
+      description =
+        "Comprehensive overview of my skills, experience, and qualifications.";
+      onClick = () => window.open(resumeUrl, "_blank"); // Open resume in a new tab
     }
 
     const newInfoAirdrop = {
@@ -148,17 +209,17 @@ const TreasureMap = () => {
       onClick, // Pass the onClick handler
     };
 
-    setActiveInfoAirdrops(prev => [...prev, newInfoAirdrop]);
+    setActiveInfoAirdrops((prev) => [...prev, newInfoAirdrop]);
   };
 
   // Function to remove an airdrop
   const removeAirdrop = (id: string) => {
-    setActiveAirdrops(prev => prev.filter(item => item.id !== id));
+    setActiveAirdrops((prev) => prev.filter((item) => item.id !== id));
   };
 
   // Function to remove an info airdrop
   const removeInfoAirdrop = (id: string) => {
-    setActiveInfoAirdrops(prev => prev.filter(item => item.id !== id));
+    setActiveInfoAirdrops((prev) => prev.filter((item) => item.id !== id));
   };
 
   const toggleFullscreen = () => {
@@ -233,7 +294,7 @@ const TreasureMap = () => {
 
           {/* Contact info */}
           <ContactsSection contactInfo={contactInfo} />
-          
+
           {/* Info Button */}
           <InfoButton onClick={() => setIsInfoSheetOpen(true)} />
 
@@ -294,7 +355,7 @@ const TreasureMap = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
           />
-          
+
           {/* Ship decoration */}
           <motion.div
             className="absolute bottom-1/3 left-1/5 w-24 h-24 opacity-15 bg-contain bg-center bg-no-repeat pointer-events-none"
@@ -304,11 +365,105 @@ const TreasureMap = () => {
           />
         </motion.div>
       </div>
-      
+
+      <button
+        onClick={toggleChat}
+        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-amber-600 text-white flex items-center justify-center shadow-lg hover:bg-amber-700 transition-all z-50"
+        aria-label={
+          isOpen ? "Close treasure hunt chat" : "Open treasure hunt chat"
+        }
+      >
+        {isOpen ? (
+          <X size={24} />
+        ) : (
+          <Compass size={24} className="animate-pulse" />
+        )}
+      </button>
+
+      <div
+        className={`fixed bottom-24 right-6 w-full max-w-md transition-all duration-300 ease-in-out z-40 ${
+          isOpen
+            ? "opacity-100 scale-100"
+            : "opacity-0 scale-95 pointer-events-none"
+        }`}
+      >
+        <Card className="border-2 border-amber-600 bg-amber-50 shadow-xl overflow-hidden">
+          <div className="bg-amber-600 text-white p-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Map size={20} />
+              <h2 className="font-bold">Treasure Hunt Guide</h2>
+            </div>
+            <Anchor size={20} />
+          </div>
+
+          <div
+            ref={chatContainerRef}
+            className="h-80 overflow-y-auto p-4 bg-amber-100"
+          >
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`mb-4 max-w-[80%] ${
+                  message.role === "user" ? "ml-auto" : "mr-auto"
+                }`}
+              >
+                <div
+                  className={`p-3 rounded-lg ${
+                    message.role === "user"
+                      ? "bg-amber-600 text-white rounded-br-none"
+                      : "bg-amber-200 text-amber-900 rounded-bl-none border border-amber-300"
+                  }`}
+                >
+                  {message.content}
+                </div>
+              </div>
+            ))}
+
+            {error && (
+              <div className="mb-4 max-w-[80%] mr-auto">
+                <div className="p-3 rounded-lg bg-red-100 text-red-800 rounded-bl-none border border-red-300">
+                  {error}
+                </div>
+              </div>
+            )}
+
+            {isLoading && (
+              <div className="mb-4 max-w-[80%] mr-auto">
+                <div className="p-3 rounded-lg bg-amber-200 text-amber-900 rounded-bl-none border border-amber-300">
+                  <div className="flex space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-amber-600 animate-bounce" />
+                    <div className="w-2 h-2 rounded-full bg-amber-600 animate-bounce delay-150" />
+                    <div className="w-2 h-2 rounded-full bg-amber-600 animate-bounce delay-300" />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="p-2 border-t border-amber-200 bg-amber-50"
+          >
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 p-2 rounded border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+              />
+              <Button type="submit" className="bg-amber-600 hover:bg-amber-700">
+                <Send size={18} />
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
+
       {/* Info Sheet */}
-      <InfoSheet 
-        isOpen={isInfoSheetOpen} 
-        onClose={() => setIsInfoSheetOpen(false)} 
+      <InfoSheet
+        isOpen={isInfoSheetOpen}
+        onClose={() => setIsInfoSheetOpen(false)}
       />
     </div>
   );
