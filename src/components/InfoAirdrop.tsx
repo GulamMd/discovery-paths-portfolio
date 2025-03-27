@@ -125,6 +125,19 @@ const InfoAirdrop = ({
     }
   };
 
+  const getParachuteImageSrc = () => {
+    switch (type) {
+      case 'education':
+        return './lovable-uploads/5c7c1ef9-0925-4ab8-9349-6561a0f7ed18.png';
+      case 'work':
+        return './lovable-uploads/e747847e-fd8b-4f7e-862d-f38020095d67.png';
+      case 'resume':
+        return './lovable-uploads/114538e9-4b42-4835-a16e-d6c68b21963e.png';
+      default:
+        return './lovable-uploads/Untitled design.svg';
+    }
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -164,11 +177,11 @@ const InfoAirdrop = ({
             <HoverCardTrigger asChild>
               <div className="flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-110">
                 {/* Parachute */}
-                <div className="w-16 h-12 mb-1 drop-shadow-lg">
+                <div className="w-16 h-16 mb-1 drop-shadow-lg">
                   <img 
-                    src="./lovable-uploads/Untitled design.svg" 
+                    src={getParachuteImageSrc()} 
                     alt="Parachute" 
-                    className="w-full object-contain"
+                    className="w-full h-full object-contain"
                     style={{ backgroundColor: 'transparent' }}
                   />
                 </div>
