@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -14,6 +13,7 @@ interface InfoAirdropProps {
   y: number;
   delay?: number;
   onComplete?: () => void;
+  onClick?: () => void; // Add onClick prop
 }
 
 const InfoAirdrop = ({
@@ -25,7 +25,8 @@ const InfoAirdrop = ({
   x,
   y,
   delay = 0,
-  onComplete
+  onComplete,
+  onClick, // Add onClick prop
 }: InfoAirdropProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -128,11 +129,11 @@ const InfoAirdrop = ({
   const getParachuteImageSrc = () => {
     switch (type) {
       case 'education':
-        return './lovable-uploads/5c7c1ef9-0925-4ab8-9349-6561a0f7ed18.png';
+        return './lovable-uploads/graduation_cap-ai.png';
       case 'work':
-        return './lovable-uploads/e747847e-fd8b-4f7e-862d-f38020095d67.png';
+        return './lovable-uploads/work_experience_ai.png';
       case 'resume':
-        return './lovable-uploads/114538e9-4b42-4835-a16e-d6c68b21963e.png';
+        return './lovable-uploads/resume-ai.png';
       default:
         return './lovable-uploads/Untitled design.svg';
     }
@@ -172,6 +173,7 @@ const InfoAirdrop = ({
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onClick={type === 'resume' ? onClick : undefined} // Handle click for resume
         >
           <HoverCard>
             <HoverCardTrigger asChild>
@@ -187,9 +189,7 @@ const InfoAirdrop = ({
                 </div>
                 
                 {/* Icon container */}
-                <div className={`w-10 h-10 rounded-full ${getBackgroundColor()} flex items-center justify-center border border-treasure-brown shadow-md`}>
-                  {getIcon()}
-                </div>
+                
               </div>
             </HoverCardTrigger>
             

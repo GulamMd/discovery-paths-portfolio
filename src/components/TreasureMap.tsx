@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Fullscreen } from "lucide-react";
@@ -28,6 +27,7 @@ const TreasureMap = () => {
     x: number;
     y: number;
     delay: number;
+    onClick?: () => void;
   }>>([]);
   const [isInfoSheetOpen, setIsInfoSheetOpen] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -105,16 +105,17 @@ const TreasureMap = () => {
   const addRandomInfoAirdrop = () => {
     const randomDelay = Math.random() * 2; // Random delay between 0-2 seconds
     const randomX = Math.random() * 80 + 10; // Random x position 10-90%
-    
+
     // Determine type of info airdrop
     const types = ['education', 'work', 'resume'] as const;
     const randomTypeIndex = Math.floor(Math.random() * types.length);
     const type = types[randomTypeIndex];
-    
+
     let title = '';
     let subtitle = '';
     let description = '';
-    
+    let onClick: (() => void) | undefined;
+
     // Set content based on type
     if (type === 'education') {
       const randomEduIndex = Math.floor(Math.random() * educationItems.length);
@@ -132,8 +133,9 @@ const TreasureMap = () => {
       title = 'My Resume';
       subtitle = 'Click to view my full resume';
       description = 'Comprehensive overview of my skills, experience, and qualifications.';
+      onClick = () => window.open(resumeUrl, '_blank'); // Open resume in a new tab
     }
-    
+
     const newInfoAirdrop = {
       id: `info-airdrop-${Date.now()}-${Math.random()}`,
       type,
@@ -142,9 +144,10 @@ const TreasureMap = () => {
       description,
       x: randomX,
       y: 0,
-      delay: randomDelay
+      delay: randomDelay,
+      onClick, // Pass the onClick handler
     };
-    
+
     setActiveInfoAirdrops(prev => [...prev, newInfoAirdrop]);
   };
 
@@ -278,6 +281,7 @@ const TreasureMap = () => {
                 x={airdrop.x}
                 y={airdrop.y}
                 delay={airdrop.delay}
+                onClick={airdrop.onClick} // Pass the onClick handler
                 onComplete={() => removeInfoAirdrop(airdrop.id)}
               />
             ))}
