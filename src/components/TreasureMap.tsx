@@ -4,17 +4,31 @@ import { motion, useAnimation } from "framer-motion";
 import { Fullscreen } from "lucide-react";
 import { useParallaxEffect } from "@/utils/animations";
 import ProjectAirdrop from "./ProjectAirdrop";
+import InfoAirdrop from "./InfoAirdrop";
 import ContactsSection from "./ContactsSection";
 import InfoButton from "./InfoButton";
 import InfoSheet from "./InfoSheet";
 import {
   contactInfo,
   projectItems,
+  educationItems,
+  workExperienceItems,
+  resumeUrl
 } from "@/data/portfolioData";
 
 const TreasureMap = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeAirdrops, setActiveAirdrops] = useState<Array<{ id: string; project: typeof projectItems[0]; delay: number }>>([]);
+  const [activeInfoAirdrops, setActiveInfoAirdrops] = useState<Array<{
+    id: string;
+    type: 'education' | 'work' | 'resume';
+    title: string;
+    subtitle: string;
+    description: string;
+    x: number;
+    y: number;
+    delay: number;
+  }>>([]);
   const [isInfoSheetOpen, setIsInfoSheetOpen] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,6 +60,23 @@ const TreasureMap = () => {
     
     return () => clearInterval(interval);
   }, [activeAirdrops.length]);
+
+  // Initialize info airdrops system
+  useEffect(() => {
+    // Start with one education airdrop
+    if (activeInfoAirdrops.length === 0) {
+      addRandomInfoAirdrop();
+    }
+    
+    // Set up interval for continuous info airdrops
+    const interval = setInterval(() => {
+      if (activeInfoAirdrops.length < 2) { // Limit concurrent info airdrops to 2
+        addRandomInfoAirdrop();
+      }
+    }, 8000); // Add new info airdrop every 8 seconds if below limit
+    
+    return () => clearInterval(interval);
+  }, [activeInfoAirdrops.length]);
   
   // Function to add a random airdrop
   const addRandomAirdrop = () => {
@@ -70,9 +101,61 @@ const TreasureMap = () => {
     setActiveAirdrops(prev => [...prev, newAirdrop]);
   };
 
+  // Function to add a random info airdrop
+  const addRandomInfoAirdrop = () => {
+    const randomDelay = Math.random() * 2; // Random delay between 0-2 seconds
+    const randomX = Math.random() * 80 + 10; // Random x position 10-90%
+    
+    // Determine type of info airdrop
+    const types = ['education', 'work', 'resume'] as const;
+    const randomTypeIndex = Math.floor(Math.random() * types.length);
+    const type = types[randomTypeIndex];
+    
+    let title = '';
+    let subtitle = '';
+    let description = '';
+    
+    // Set content based on type
+    if (type === 'education') {
+      const randomEduIndex = Math.floor(Math.random() * educationItems.length);
+      const item = educationItems[randomEduIndex];
+      title = item.title;
+      subtitle = `${item.institution} • ${item.period}`;
+      description = item.description;
+    } else if (type === 'work') {
+      const randomWorkIndex = Math.floor(Math.random() * workExperienceItems.length);
+      const item = workExperienceItems[randomWorkIndex];
+      title = item.role;
+      subtitle = `${item.company} • ${item.period}`;
+      description = item.description;
+    } else if (type === 'resume') {
+      title = 'My Resume';
+      subtitle = 'Click to view my full resume';
+      description = 'Comprehensive overview of my skills, experience, and qualifications.';
+    }
+    
+    const newInfoAirdrop = {
+      id: `info-airdrop-${Date.now()}-${Math.random()}`,
+      type,
+      title,
+      subtitle,
+      description,
+      x: randomX,
+      y: 0,
+      delay: randomDelay
+    };
+    
+    setActiveInfoAirdrops(prev => [...prev, newInfoAirdrop]);
+  };
+
   // Function to remove an airdrop
   const removeAirdrop = (id: string) => {
     setActiveAirdrops(prev => prev.filter(item => item.id !== id));
+  };
+
+  // Function to remove an info airdrop
+  const removeInfoAirdrop = (id: string) => {
+    setActiveInfoAirdrops(prev => prev.filter(item => item.id !== id));
   };
 
   const toggleFullscreen = () => {
@@ -164,7 +247,7 @@ const TreasureMap = () => {
             <Fullscreen className="text-treasure-red h-6 w-6" />
           </motion.button>
 
-          {/* Active airdrops */}
+          {/* Active project airdrops */}
           <div className="relative z-10">
             {activeAirdrops.map((airdrop) => (
               <ProjectAirdrop
@@ -178,6 +261,24 @@ const TreasureMap = () => {
                 x={airdrop.project.coordinates.x}
                 y={airdrop.project.coordinates.y}
                 onComplete={() => removeAirdrop(airdrop.id)}
+              />
+            ))}
+          </div>
+
+          {/* Active info airdrops */}
+          <div className="relative z-10">
+            {activeInfoAirdrops.map((airdrop) => (
+              <InfoAirdrop
+                key={airdrop.id}
+                id={airdrop.id}
+                type={airdrop.type}
+                title={airdrop.title}
+                subtitle={airdrop.subtitle}
+                description={airdrop.description}
+                x={airdrop.x}
+                y={airdrop.y}
+                delay={airdrop.delay}
+                onComplete={() => removeInfoAirdrop(airdrop.id)}
               />
             ))}
           </div>

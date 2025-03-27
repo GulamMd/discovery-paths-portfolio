@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Briefcase, GraduationCap, Award, FileText, ExternalLink } from "lucide-react";
+import { X, Briefcase, GraduationCap, Award, FileText, ExternalLink, Boxes } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -8,7 +9,8 @@ import { useParallaxEffect } from "@/utils/animations";
 import { 
   workExperienceItems, 
   educationItems, 
-  resumeUrl 
+  resumeUrl,
+  projectItems
 } from "@/data/portfolioData";
 
 interface InfoSheetProps {
@@ -42,7 +44,7 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
         </SheetHeader>
 
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-3 bg-parchment-dark/20 border border-treasure-brown/30 mb-6">
+          <TabsList className="w-full grid grid-cols-4 bg-parchment-dark/20 border border-treasure-brown/30 mb-6">
             <TabsTrigger 
               value="experience" 
               className="font-medium flex items-center gap-2 data-[state=active]:bg-parchment-light data-[state=active]:text-treasure-red"
@@ -56,6 +58,13 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
             >
               <GraduationCap size={16} />
               <span className="hidden sm:inline">Education</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="projects" 
+              className="font-medium flex items-center gap-2 data-[state=active]:bg-parchment-light data-[state=active]:text-treasure-red"
+            >
+              <Boxes size={16} />
+              <span className="hidden sm:inline">Projects</span>
             </TabsTrigger>
             <TabsTrigger 
               value="resume" 
@@ -147,6 +156,80 @@ const InfoSheet = ({ isOpen, onClose }: InfoSheetProps) => {
                           transition={{ duration: 0.3, delay: 0.1 }}
                         >
                           <p>{item.description}</p>
+                        </motion.div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </motion.div>
+            </TabsContent>
+
+            <TabsContent value="projects" className="mt-0">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <h3 className="font-display text-xl text-navy-dark mb-4">Projects</h3>
+                <Accordion type="single" collapsible className="w-full" defaultValue={projectItems[0]?.id}>
+                  {projectItems.map((item, index) => (
+                    <AccordionItem 
+                      key={item.id} 
+                      value={item.id}
+                      className="border-treasure-brown/30 overflow-hidden"
+                    >
+                      <AccordionTrigger className="hover:text-treasure-red transition-colors py-3">
+                        <div className="flex flex-col items-start text-left">
+                          <span className="font-medium text-lg">{item.title}</span>
+                          <span className="text-sm text-treasure-brown">
+                            {item.technologies.slice(0, 2).join(", ")}
+                            {item.technologies.length > 2 && "..."}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-treasure-brown">
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: 0.1 }}
+                          className="space-y-3"
+                        >
+                          {item.image && (
+                            <div className="w-full h-40 rounded-md overflow-hidden mb-3">
+                              <img 
+                                src={item.image} 
+                                alt={item.title} 
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.src = '/placeholder.svg';
+                                }}
+                              />
+                            </div>
+                          )}
+                          <p>{item.description}</p>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {item.technologies.map((tech, idx) => (
+                              <span 
+                                key={idx}
+                                className="text-xs px-2 py-1 bg-navy-light text-parchment-light rounded-full"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                          {item.link && (
+                            <div className="mt-3">
+                              <a 
+                                href={item.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-sm text-treasure-gold hover:text-treasure-red transition-colors"
+                              >
+                                View Project <ExternalLink size={14} />
+                              </a>
+                            </div>
+                          )}
                         </motion.div>
                       </AccordionContent>
                     </AccordionItem>
